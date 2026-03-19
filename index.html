@@ -144,7 +144,7 @@ textarea.ans.lg{min-height:180px}
     <div class="id-field"><label>Nom *</label><input type="text" id="f-nom" placeholder="DUPONT" autocomplete="family-name"></div>
     <div class="id-field"><label>Prénom *</label><input type="text" id="f-prenom" placeholder="Marie" autocomplete="given-name"></div>
     <button class="btn-start" onclick="startEval()">Commencer l'évaluation →</button>
-    <p class="id-note">Durée : 1h30 · Documents autorisés · Travail individuel</p>
+    <p class="id-note">Durée : 2h · Documents autorisés · Travail individuel</p>
   </div>
 </div>
 
@@ -154,7 +154,7 @@ textarea.ans.lg{min-height:180px}
   <div class="hdr-title">Évaluation Finale · SIRH & IA</div>
   <div class="hdr-right">
     <button class="t-btn" id="t-btn" onclick="toggleTimer()">⏸ Pause</button>
-    <div id="timer-display">1:30:00</div>
+    <div id="timer-display">2:00:00</div>
   </div>
 </header>
 <div id="prog-wrap"><div id="prog-bar"></div></div>
@@ -167,7 +167,7 @@ textarea.ans.lg{min-height:180px}
     <div class="hero-tag">Module SIRH · Data · IA — Bloc 3 RNCP</div>
     <h1 class="hero-title">Évaluation finale<br><em>TechDistrib</em></h1>
     <div class="chips">
-      <span class="chip">⏱ 1h30</span>
+      <span class="chip">⏱ 2h</span>
       <span class="chip">👤 Individuel</span>
       <span class="chip">📄 Export PDF</span>
       <span class="chip">✅ Supports autorisés</span>
@@ -193,9 +193,9 @@ textarea.ans.lg{min-height:180px}
     <div class="cas-head">
       <div class="cas-n n1">01</div>
       <div class="cas-info">
-        <div class="cas-pill p1">Cas 1 · 30 min</div>
+        <div class="cas-pill p1">Cas 1 · 40 min</div>
         <h2 class="cas-title">Diagnostic du SI<br>& Valeur de la Data</h2>
-        <div class="cas-time">⏱ 30 minutes conseillées</div>
+        <div class="cas-time">⏱ 40 minutes conseillées</div>
       </div>
     </div>
     <div class="situ"><strong>Mise en situation :</strong> Avant tout projet de digitalisation, Isabelle vous demande d'évaluer la maturité digitale de TechDistrib et de poser les premières bases d'une stratégie data autour du problème de turnover.</div>
@@ -235,9 +235,9 @@ textarea.ans.lg{min-height:180px}
     <div class="cas-head">
       <div class="cas-n n2">02</div>
       <div class="cas-info">
-        <div class="cas-pill p2">Cas 2 · 30 min</div>
+        <div class="cas-pill p2">Cas 2 · 40 min</div>
         <h2 class="cas-title">Choix de la solution SIRH<br>& Modules prioritaires</h2>
-        <div class="cas-time">⏱ 30 minutes conseillées</div>
+        <div class="cas-time">⏱ 40 minutes conseillées</div>
       </div>
     </div>
     <div class="situ"><strong>Mise en situation :</strong> Le diagnostic est posé. Isabelle doit convaincre la direction. Elle attend de vous une recommandation argumentée sur le type de solution à déployer et les modules à prioriser — <em>pas de bonne réponse unique</em>, mais une logique solide et cohérente avec TechDistrib.</div>
@@ -272,9 +272,9 @@ textarea.ans.lg{min-height:180px}
     <div class="cas-head">
       <div class="cas-n n3">03</div>
       <div class="cas-info">
-        <div class="cas-pill p3">Cas 3 · 30 min</div>
+        <div class="cas-pill p3">Cas 3 · 40 min</div>
         <h2 class="cas-title">IA générative & Stratégie<br>pour TechDistrib</h2>
-        <div class="cas-time">⏱ 30 minutes conseillées</div>
+        <div class="cas-time">⏱ 40 minutes conseillées</div>
       </div>
     </div>
     <div class="situ"><strong>Mise en situation :</strong> 18 mois après le déploiement, TechDistrib dispose de données centralisées. La direction générale veut savoir comment l'IA peut renforcer la fonction RH. Isabelle vous demande de proposer un cas d'usage concret et de rédiger le prompt qui permettrait de l'activer.</div>
@@ -372,7 +372,7 @@ function buildSaas() {
 }
 
 // ── TIMER ─────────────────────────────────────────────────────────────
-let secs = 90 * 60, running = false, iv = null;
+let secs = 120 * 60, running = false, iv = null;
 
 function startTimer() {
   running = true;
@@ -400,7 +400,7 @@ function renderTimer() {
 }
 
 function updateProg() {
-  document.getElementById('prog-bar').style.width = Math.min(((90 * 60 - secs) / (90 * 60)) * 100, 100) + '%';
+  document.getElementById('prog-bar').style.width = Math.min(((120 * 60 - secs) / (120 * 60)) * 100, 100) + '%';
 }
 
 // ── STORAGE ───────────────────────────────────────────────────────────
