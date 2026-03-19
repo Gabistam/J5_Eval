@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation Individuelle — M2 SIRH & IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0f14;--surface:#16171e;--card:#1c1e27;--border:#2a2c38;--border2:#363848;--text:#e8e6f0;--muted:#7a7a96;--faint:#3a3b50;--accent:#7c6af7;--accent2:#f07c4a;--gold:#e8c96a;--green:#4ac98e;--red:#f05a5a;--cas1:#7c6af7;--cas2:#4ac9b8;--cas3:#f07c4a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+#screen-identity{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}
+.id-wrap{width:100%;max-width:480px;padding:24px}
+.id-logo{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:32px;display:flex;align-items:center;gap:12px}
+.id-logo::before{content:'';display:block;width:32px;height:2px;background:var(--accent)}
+.id-title{font-family:'Fraunces',serif;font-size:38px;font-weight:600;line-height:1.1;margin-bottom:8px;color:var(--text)}
+.id-sub{font-size:14px;color:var(--muted);margin-bottom:40px;line-height:1.5}
+.id-field{margin-bottom:18px}
+.id-field label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.id-field input,.id-field select{width:100%;background:var(--card);border:1px solid var(--border2);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;padding:12px 16px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.id-field input::placeholder{color:var(--faint)}
+.id-field input:focus,.id-field select:focus{border-color:var(--accent)}
+.id-field select option{background:var(--card)}
+.btn-start{width:100%;margin-top:8px;padding:15px;background:var(--accent);color:white;border:none;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+.btn-start:hover{opacity:.88}
+.id-note{margin-top:20px;font-size:12px;color:var(--faint);text-align:center;line-height:1.5}
+#app-header{position:sticky;top:0;z-index:500;height:56px;background:rgba(14,15,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:none;align-items:center;padding:0 28px;gap:20px}
+.hdr-name{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.hdr-title{flex:1;text-align:center;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+#timer-display{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--gold);min-width:80px;text-align:right;transition:color .3s}
+#timer-display.warn{color:var(--accent2)}
+#timer-display.crit{color:var(--red);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.35}}
+.t-btn{background:var(--card);border:1px solid var(--border2);color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;padding:5px 10px;cursor:pointer;transition:all .2s}
+.t-btn:hover{border-color:var(--accent);color:var(--accent)}
+#prog-wrap{height:2px;background:var(--border);position:sticky;top:56px;z-index:499;display:none}
+#prog-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width .5s}
+main{max-width:860px;margin:0 auto;padding:52px 28px 140px;display:none}
+.hero{margin-bottom:52px}
+.hero-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-tag::after{content:'';flex:1;height:1px;background:var(--border)}
+.hero-title{font-family:'Fraunces',serif;font-size:44px;font-weight:600;line-height:1.1;margin-bottom:20px}
+.hero-title em{font-style:italic;color:var(--accent2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border2);color:var(--muted);background:var(--card)}
+.ctx{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--accent2);padding:28px 32px;margin-bottom:52px}
+.ctx-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin-bottom:10px}
+.ctx-title{font-family:'Fraunces',serif;font-size:22px;font-weight:600;margin-bottom:12px}
+.ctx-body{font-size:14px;color:#b0aec8;line-height:1.75;margin-bottom:14px}
+.ctx-body strong{color:var(--text)}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.stat{background:var(--bg);border:1px solid var(--border);padding:14px 16px}
+.stat-val{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--accent2);line-height:1}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.ctx-note{margin-top:18px;font-family:'DM Mono',monospace;font-size:11px;color:var(--faint);padding-top:14px;border-top:1px solid var(--border)}
+.cas{margin-bottom:64px}
+.cas-head{display:flex;align-items:flex-start;gap:22px;padding-bottom:22px;margin-bottom:30px;border-bottom:1px solid var(--border)}
+.cas-n{font-family:'Fraunces',serif;font-size:64px;line-height:.9;font-weight:600;flex-shrink:0}
+.cas-n.n1{color:var(--cas1)}.cas-n.n2{color:var(--cas2)}.cas-n.n3{color:var(--cas3)}
+.cas-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;margin-bottom:8px}
+.cas-pill.p1{background:var(--cas1);color:#fff}.cas-pill.p2{background:var(--cas2);color:#0e0f14}.cas-pill.p3{background:var(--cas3);color:#fff}
+.cas-title{font-family:'Fraunces',serif;font-size:26px;font-weight:600;line-height:1.2;margin-bottom:6px}
+.cas-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.situ{background:var(--surface);border-left:3px solid var(--gold);padding:16px 20px;margin-bottom:34px;font-size:13px;line-height:1.7;color:#b0aec8}
+.situ strong{color:var(--text)}
+.qblock{margin-bottom:38px}
+.qhead{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.qbadge{font-family:'DM Mono',monospace;font-size:10px;padding:3px 9px;border:1px solid currentColor;flex-shrink:0;margin-top:3px}
+.qbadge.b1{color:var(--cas1)}.qbadge.b2{color:var(--cas2)}.qbadge.b3{color:var(--cas3)}
+.qtitle{font-size:15px;font-weight:700;line-height:1.4}
+.qinstr{font-size:13px;color:#9896b0;line-height:1.7;margin-bottom:14px}
+.qinstr strong{color:var(--text)}
+.qinstr ul{padding-left:18px;margin-top:6px}
+.qinstr li{margin-bottom:3px}
+.slbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;display:block}
+textarea.ans{width:100%;background:var(--card);border:1px solid var(--border2);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.7;padding:14px 16px;resize:vertical;min-height:110px;outline:none;transition:border-color .2s}
+textarea.ans:focus{border-color:var(--accent)}
+textarea.ans.md{min-height:150px}
+textarea.ans.lg{min-height:200px}
+textarea.ans.xl{min-height:260px}
+.cc{font-family:'DM Mono',monospace;font-size:10px;color:var(--faint);text-align:right;margin-top:4px}
+.dtable{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:6px}
+.dtable th{background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:9px 12px;text-align:left;border:1px solid var(--border)}
+.dtable td{border:1px solid var(--border);vertical-align:top;padding:0}
+.dtable td.lbl{background:var(--surface);padding:10px 12px;color:var(--text);font-size:12px;font-weight:600;border-right:1px solid var(--border2);white-space:nowrap}
+.dtable td.lbl small{display:block;font-family:'DM Mono',monospace;font-size:9px;color:var(--faint);font-weight:400;margin-bottom:2px;text-transform:uppercase;letter-spacing:1px}
+.dtable td input[type="text"],.dtable td select{width:100%;background:transparent;border:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;padding:10px 12px;outline:none}
+.dtable td input[type="text"]::placeholder{color:var(--faint)}
+.dtable td input[type="text"]:focus,.dtable td select:focus{background:rgba(124,106,247,.06)}
+.ssel{font-family:'DM Mono',monospace!important;font-size:14px!important;cursor:pointer;text-align:center}
+.alert-box{background:rgba(248,196,106,.06);border:1px solid rgba(248,196,106,.2);border-left:3px solid var(--gold);padding:12px 16px;font-size:12px;color:#c8b870;margin:12px 0;line-height:1.6}
+.div-line{height:1px;background:var(--border);margin:56px 0;position:relative}
+.div-line::after{content:attr(data-cas);position:absolute;right:0;top:-9px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--faint);background:var(--bg);padding-left:10px}
+.footer{text-align:center;padding:40px 0 20px;font-family:'DM Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px;border-top:1px solid var(--border)}
+#fab{position:fixed;bottom:28px;right:28px;z-index:300;display:none;flex-direction:column;align-items:flex-end;gap:8px}
+#save-note{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:5px 10px}
+.fab-btn{background:var(--accent);color:white;border:none;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 22px;cursor:pointer;display:flex;align-items:center;gap:9px;box-shadow:0 8px 32px rgba(124,106,247,.4);transition:opacity .2s,transform .1s}
+.fab-btn:hover{opacity:.88;transform:translateY(-1px)}
+.print-hdr{display:none;text-align:center;padding:18px 0;margin-bottom:20px;border-bottom:2px solid black;font-family:sans-serif}
+.print-hdr h1{font-size:18px;margin-bottom:4px}
+.print-hdr p{font-size:12px;color:#444}
+@media print{
+  #screen-identity,#app-header,#prog-wrap,#fab{display:none!important}
+  body{background:white!important;color:black!important}
+  .print-hdr{display:block!important}
+  .ctx{background:#f5f5f5!important;border-top:3px solid #f07c4a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cas-pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .dtable th{background:#eee!important;color:#333!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .dtable td.lbl{background:#f8f8f8!important;color:black!important}
+  /* hidden during print — proxies take over */
+  textarea.ans{display:none!important}
+  .dtable td input[type="text"]{display:none!important}
+  .situ{background:#f8f8f5!important;color:#333!important;border-left:3px solid #c9952a}
+  main{padding:0!important}
+  .hero-title{color:black!important}
+  .cas-title{color:black!important}
+  .hero-title em{color:#c96040!important}
+  .cas{break-before:page}
+  .cas:first-of-type{break-before:avoid}
+  .qblock{break-inside:avoid}
+  .cas-n{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* proxy divs */
+  .print-proxy-ta{
+    width:100%;
+    border:1px solid #ccc!important;
+    padding:10px 12px;
+    font-family:'Outfit',sans-serif;
+    font-size:13px;
+    line-height:1.65;
+    color:black;
+    background:white;
+    white-space:pre-wrap;
+    word-break:break-word;
+    min-height:40px;
+  }
+  .print-proxy-inp{
+    width:100%;
+    padding:8px 12px;
+    font-family:'Outfit',sans-serif;
+    font-size:13px;
+    color:black;
+    background:transparent;
+    white-space:pre-wrap;
+    word-break:break-word;
+    min-height:20px;
+  }
+  .print-proxy-sel{
+    text-align:center;
+    font-size:15px;
+    padding:6px;
+  }
+  .cc{display:none!important}
+  .alert-box{display:none!important}
+}
+@media(max-width:620px){main{padding:32px 16px 120px}.hero-title{font-size:30px}.cas-n{font-size:44px}.stat-row{grid-template-columns:1fr 1fr}#app-header{padding:0 14px}.hdr-name{max-width:130px}#fab{bottom:16px;right:16px}}
+</style>
+</head>
+<body>
+
+<div id="screen-identity">
+  <div class="id-wrap">
+    <div class="id-logo">M2 MDRH · SIRH & IA</div>
+    <h1 class="id-title">Évaluation<br>individuelle</h1>
+    <p class="id-sub">Identifiez-vous avant de commencer. Ces informations figureront sur votre copie PDF.</p>
+    <div class="id-field"><label>Nom *</label><input type="text" id="f-nom" placeholder="DUPONT" autocomplete="family-name"></div>
+    <div class="id-field"><label>Prénom *</label><input type="text" id="f-prenom" placeholder="Marie" autocomplete="given-name"></div>
+
+    <button class="btn-start" onclick="startEval()">Commencer l'évaluation →</button>
+    <p class="id-note">Durée : 1h30 · Documents autorisés · Travail individuel</p>
+  </div>
+</div>
+
+<header id="app-header">
+  <div class="hdr-name" id="hdr-name">—</div>
+  <div class="hdr-title">Évaluation Finale · SIRH & IA</div>
+  <div class="hdr-right">
+    <button class="t-btn" id="t-btn" onclick="toggleTimer()">⏸ Pause</button>
+    <div id="timer-display">1:30:00</div>
+  </div>
+</header>
+<div id="prog-wrap"><div id="prog-bar"></div></div>
+
+<main id="main">
+  <div class="print-hdr"><h1>Évaluation Finale — M2 SIRH & IA</h1><p id="print-id"></p></div>
+
+  <div class="hero">
+    <div class="hero-tag">Module SIRH · Data · IA — Bloc 3 RNCP</div>
+    <h1 class="hero-title">Évaluation finale<br><em>TechDistrib</em></h1>
+    <div class="chips">
+      <span class="chip">⏱ 1h30</span>
+      <span class="chip">👤 Travail individuel</span>
+      <span class="chip">📄 Export PDF</span>
+      <span class="chip">✅ Supports autorisés</span>
+    </div>
+  </div>
+
+  <div class="ctx">
+    <div class="ctx-label">Fil rouge · Entreprise mise en situation</div>
+    <h2 class="ctx-title">TechDistrib — ETI en transformation digitale RH</h2>
+    <p class="ctx-body"><strong>TechDistrib</strong> est une ETI française spécialisée dans la distribution de matériel professionnel (outillage industriel, équipements de sécurité), comptant <strong>350 salariés</strong> répartis sur 4 sites : siège à Lyon, agences à Bordeaux, Nantes et Strasbourg. Croissance soutenue de <strong>+22 % de CA</strong> sur 3 ans.</p>
+    <p class="ctx-body"><strong>Isabelle Morin</strong>, DRH récemment nommée, a reçu mandat de la direction pour moderniser la fonction RH. <strong>Situation actuelle :</strong> gestion 100 % papier/Excel, aucun outil centralisé, recrutement par e-mail (sans ATS), formation sans traçabilité, paie externalisée mal intégrée, aucun tableau de bord RH.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-val">18 %</div><div class="stat-lbl">Turnover<small>(secteur : 12 %)</small></div></div>
+      <div class="stat"><div class="stat-val">5,8 %</div><div class="stat-lbl">Absentéisme<small>(en hausse)</small></div></div>
+      <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Sites<small>(données non centralisées)</small></div></div>
+      <div class="stat"><div class="stat-val">0</div><div class="stat-lbl">Outil SIRH<small>(aucun existant)</small></div></div>
+    </div>
+    <p class="ctx-note">⚠ Les 3 cas sont interdépendants — assurez-vous que vos réponses restent cohérentes d'un cas à l'autre.</p>
+  </div>
+
+  <!-- CAS 1 -->
+  <section class="cas" id="cas1">
+    <div class="cas-head">
+      <div class="cas-n n1">01</div>
+      <div class="cas-info">
+        <div class="cas-pill p1">Cas 1 · 30 min</div>
+        <h2 class="cas-title">Diagnostic & Analyse<br>du système d'information</h2>
+        <div class="cas-time">⏱ 30 minutes conseillées</div>
+      </div>
+    </div>
+    <div class="situ"><strong>Mise en situation :</strong> Isabelle vous confie l'état des lieux avant tout projet de digitalisation. Vous devez évaluer la maturité digitale de TechDistrib, cartographier un processus clé <em>tel qu'il existe aujourd'hui</em>, et amorcer une réflexion sur l'exploitation des données.</div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b1">Q 1.1</span><span class="qtitle">Grille de maturité digitale — votre évaluation personnelle</span></div>
+      <p class="qinstr">Évaluez la maturité digitale de TechDistrib selon les 10 critères ci-dessous. Sélectionnez votre statut (<strong>✅ / 🟠 / ❌</strong>) et rédigez une justification courte, ancrée dans le contexte.</p>
+      <table class="dtable"><thead><tr><th style="width:36%">Critère</th><th style="width:13%">Statut</th><th>Votre justification</th></tr></thead><tbody id="t-mat"></tbody></table>
+      <span class="slbl">Synthèse — Votre verdict personnel (4–6 lignes)</span>
+      <textarea class="ans md" id="q11syn" placeholder="À partir de votre évaluation, rédigez votre propre diagnostic : TechDistrib est-elle prête à digitaliser ? Quelles sont selon vous les 2 conditions préalables les plus urgentes ? Justifiez avec vos propres arguments."></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b1">Q 1.2</span><span class="qtitle">Cartographie du processus de recrutement actuel</span></div>
+      <p class="qinstr">Décrivez le processus de recrutement tel qu'il fonctionne <em>aujourd'hui</em> chez TechDistrib (e-mail, sans outil dédié, multi-sites non coordonnés). Pour chaque étape, précisez l'acteur, l'input, l'output et le problème observé.</p>
+      <table class="dtable"><thead><tr><th style="width:20%">Étape</th><th style="width:17%">Acteur</th><th style="width:20%">Input</th><th style="width:22%">Output</th><th>Problème observé</th></tr></thead><tbody id="t-recr"></tbody></table>
+      <span class="slbl">Le gaspillage Lean que vous jugez prioritaire à corriger — et pourquoi</span>
+      <textarea class="ans" id="q12lean" placeholder="Parmi les problèmes identifiés, lequel vous semble le plus dommageable ? Expliquez ce qu'il coûte concrètement à TechDistrib (temps, qualité, attractivité candidats…)."></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b1">Q 1.3</span><span class="qtitle">Pyramide de la valeur Data — application au turnover</span></div>
+      <p class="qinstr">Appliquez la pyramide <strong>Données → Information → Connaissance → Sagesse</strong> au problème de turnover (18 %) de TechDistrib. À chaque niveau, donnez un exemple concret et original issu de votre réflexion.</p>
+      <table class="dtable"><thead><tr><th style="width:22%">Niveau</th><th>Votre exemple concret chez TechDistrib</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">📁 Donnée brute</td><td><input type="text" id="pyr1" placeholder="Information brute stockable dans le SIRH…"></td></tr>
+        <tr><td class="lbl">📊 Information</td><td><input type="text" id="pyr2" placeholder="Ce que l'on peut calculer ou comparer…"></td></tr>
+        <tr><td class="lbl">💡 Connaissance</td><td><input type="text" id="pyr3" placeholder="Ce que l'on comprend sur la situation TechDistrib…"></td></tr>
+        <tr><td class="lbl">🧠 Sagesse</td><td><input type="text" id="pyr4" placeholder="La décision managériale que vous recommandez à Isabelle…"></td></tr>
+      </tbody></table>
+    </div>
+  </section>
+
+  <div class="div-line" data-cas="→ Cas 2"></div>
+
+  <!-- CAS 2 -->
+  <section class="cas" id="cas2">
+    <div class="cas-head">
+      <div class="cas-n n2">02</div>
+      <div class="cas-info">
+        <div class="cas-pill p2">Cas 2 · 30 min</div>
+        <h2 class="cas-title">Choix SIRH & Plan<br>de déploiement</h2>
+        <div class="cas-time">⏱ 30 minutes conseillées</div>
+      </div>
+    </div>
+    <div class="situ"><strong>Mise en situation :</strong> Le diagnostic est posé. Isabelle soumet à la direction une recommandation sur le choix de la solution et les modules prioritaires. Elle attend <em>votre analyse personnelle et justifiée</em> — pas de réponse unique attendue, mais une argumentation solide.</div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b2">Q 2.1</span><span class="qtitle">SaaS ou OnPremise — votre analyse pour TechDistrib</span></div>
+      <p class="qinstr">Complétez le tableau comparatif en tenant compte de la réalité de TechDistrib. Pour chaque critère, évaluez les deux options, puis formulez <em>votre recommandation personnelle</em>.</p>
+      <table class="dtable"><thead><tr><th style="width:24%">Critère</th><th style="width:25%">SaaS</th><th style="width:25%">OnPremise</th><th>Votre recommandation</th></tr></thead><tbody id="t-saas"></tbody></table>
+      <span class="slbl">Votre recommandation globale et argumentation (5 lignes max)</span>
+      <textarea class="ans md" id="q21reco" placeholder="Quelle option recommandez-vous personnellement à Isabelle ? Développez votre raisonnement en citant au moins 3 arguments spécifiques à TechDistrib (taille, sites, budget, maturité IT…)."></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b2">Q 2.2</span><span class="qtitle">Votre choix des 2 modules prioritaires — avec argumentation</span></div>
+      <p class="qinstr">Budget Phase 1 : <strong>2 modules maximum</strong>. Choisissez parmi : <strong>Core RH — ATS — LMS — PMS — Paie/GTA</strong>.<br>Pour chaque module retenu : <em>problème constaté → module choisi → bénéfice attendu</em>. Expliquez aussi pourquoi vous écartez les autres.</p>
+      <span class="slbl">Module prioritaire n°1 — votre choix</span>
+      <textarea class="ans md" id="q22m1" placeholder="Problème constaté chez TechDistrib → Module choisi (éditeur si possible) → Bénéfice attendu…"></textarea>
+      <span class="slbl">Module prioritaire n°2 — votre choix</span>
+      <textarea class="ans md" id="q22m2" placeholder="Problème constaté chez TechDistrib → Module choisi (éditeur si possible) → Bénéfice attendu…"></textarea>
+      <span class="slbl">Pourquoi vous écartez les 3 autres modules à ce stade</span>
+      <textarea class="ans" id="q22ex" placeholder="Justifiez brièvement pourquoi les autres modules ne sont pas prioritaires en Phase 1…"></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b2">Q 2.3</span><span class="qtitle">Éléments clés du cahier des charges — votre contribution</span></div>
+      <p class="qinstr">Complétez les 5 rubriques avec des éléments <em>concrets et spécifiques à TechDistrib</em>. Évitez les formulations génériques.</p>
+      <table class="dtable"><thead><tr><th style="width:28%">Rubrique</th><th>Votre contenu (spécifique à TechDistrib)</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">1. Contexte & enjeux</td><td><input type="text" id="cdc1" placeholder="Situation de départ, mandat DG, objectifs mesurables…"></td></tr>
+        <tr><td class="lbl">2. Périmètre fonctionnel</td><td><input type="text" id="cdc2" placeholder="Modules retenus, 4 sites, 350 salariés…"></td></tr>
+        <tr><td class="lbl">3. Contraintes techniques</td><td><input type="text" id="cdc3" placeholder="Accès multi-sites, intégration paie externalisée, DSN…"></td></tr>
+        <tr><td class="lbl">4. Contraintes RGPD</td><td><input type="text" id="cdc4" placeholder="Hébergement EU, registre traitements, droits d'accès…"></td></tr>
+        <tr><td class="lbl">5. Critères de succès</td><td><input type="text" id="cdc5" placeholder="KPIs de déploiement mesurables pour TechDistrib…"></td></tr>
+      </tbody></table>
+      <div class="alert-box">💡 <strong>Point de vigilance :</strong> un cahier des charges générique n'a pas de valeur pour TechDistrib. Chaque élément doit être ancré dans la réalité de l'entreprise (350 salariés, 4 sites, budget contraint, zéro SI RH existant).</div>
+    </div>
+  </section>
+
+  <div class="div-line" data-cas="→ Cas 3"></div>
+
+  <!-- CAS 3 -->
+  <section class="cas" id="cas3">
+    <div class="cas-head">
+      <div class="cas-n n3">03</div>
+      <div class="cas-info">
+        <div class="cas-pill p3">Cas 3 · 30 min</div>
+        <h2 class="cas-title">Data, IA & Position<br>stratégique personnelle</h2>
+        <div class="cas-time">⏱ 30 minutes conseillées</div>
+      </div>
+    </div>
+    <div class="situ"><strong>Mise en situation :</strong> 18 mois après le déploiement, TechDistrib dispose enfin de données centralisées. La DG demande à Isabelle une note sur l'exploitation des données et l'intégration de l'IA. Elle souhaite des recommandations concrètes et <em>votre position personnelle argumentée</em>.</div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b3">Q 3.1</span><span class="qtitle">Construire le tableau de bord RH d'Isabelle</span></div>
+      <p class="qinstr">Proposez <strong>6 KPIs</strong> couvrant : Recrutement (2), Turnover (2), Absentéisme (1), Formation (1). Soyez précis sur la formule, la source et la cible adaptée à TechDistrib.</p>
+      <table class="dtable"><thead><tr><th style="width:25%">Dimension · KPI</th><th style="width:28%">Formule / Définition</th><th style="width:24%">Source SIRH</th><th>Cible pour TechDistrib</th></tr></thead><tbody id="t-kpi"></tbody></table>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b3">Q 3.2</span><span class="qtitle">Votre cas d'usage IA — 1 proposition originale et argumentée</span></div>
+      <p class="qinstr">Choisissez <strong>le cas d'usage IA que vous jugez le plus pertinent pour TechDistrib</strong> à ce stade (18 mois post-déploiement). Il doit être réaliste au vu de la maturité de l'entreprise. Justifiez chaque choix.</p>
+      <table class="dtable"><tbody>
+        <tr><td class="lbl" style="width:28%">Intitulé du cas d'usage</td><td><input type="text" id="ai1" placeholder="Nommez clairement votre cas d'usage…"></td></tr>
+        <tr><td class="lbl">Problème RH adressé</td><td><input type="text" id="ai2" placeholder="Quel problème spécifique de TechDistrib ?"></td></tr>
+        <tr><td class="lbl">Type d'IA mobilisé</td><td><input type="text" id="ai3" placeholder="Générative / Prédictive / NLP / ML… et pourquoi ?"></td></tr>
+        <tr><td class="lbl">Outil / Module SIRH</td><td><input type="text" id="ai4" placeholder="Outil ou éditeur concret (SAP SuccessFactors, Workday…)"></td></tr>
+        <tr><td class="lbl">Bénéfice attendu</td><td><input type="text" id="ai5" placeholder="Gain mesurable si possible (%, délai, coût…)"></td></tr>
+        <tr><td class="lbl">Condition de succès</td><td><input type="text" id="ai6" placeholder="Condition préalable à remplir chez TechDistrib…"></td></tr>
+        <tr><td class="lbl">Vigilance RGPD</td><td><input type="text" id="ai7" placeholder="Article 22, profilage, base légale, transparence…"></td></tr>
+      </tbody></table>
+      <span class="slbl">Pourquoi ce cas d'usage plutôt qu'un autre — justification personnelle</span>
+      <textarea class="ans md" id="q32just" placeholder="Expliquez votre raisonnement : pourquoi avez-vous retenu ce cas d'usage spécifiquement pour TechDistrib ? Quels critères ont guidé votre choix (maturité, urgence, ROI, faisabilité, risque…) ?"></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b3">Q 3.3</span><span class="qtitle">Prompt IA — Méthode des 5 piliers</span></div>
+      <p class="qinstr">Isabelle veut utiliser l'IA générative pour rédiger un <strong>email de communication interne</strong> annonçant le nouveau portail RH self-service aux 350 collaborateurs. Construisez le prompt complet selon la méthode des <strong>5 piliers</strong>.</p>
+      <table class="dtable"><thead><tr><th style="width:22%">Pilier</th><th>Votre rédaction</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">🎯 Contexte</td><td><input type="text" id="p1" placeholder="Rôle, entreprise, situation, public visé…"></td></tr>
+        <tr><td class="lbl">📋 Tâche</td><td><input type="text" id="p2" placeholder="Verbe d'action précis + objectif de la production…"></td></tr>
+        <tr><td class="lbl">📐 Format</td><td><input type="text" id="p3" placeholder="Structure attendue, nombre de parties, longueur…"></td></tr>
+        <tr><td class="lbl">⚙️ Contraintes</td><td><input type="text" id="p4" placeholder="Ton, éléments obligatoires, choses à éviter…"></td></tr>
+        <tr><td class="lbl">💡 Exemple</td><td><input type="text" id="p5" placeholder="(Optionnel) Phrase d'accroche ou modèle à suivre…"></td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="qblock">
+      <div class="qhead"><span class="qbadge b3">Q 3.4</span><span class="qtitle">Votre prise de position — L'IA va-t-elle supprimer des postes RH chez TechDistrib ?</span></div>
+      <p class="qinstr">Cette question appelle <strong>votre position personnelle et nuancée</strong>, ancrée dans la réalité de TechDistrib. Appuyez-vous sur les notions vues en cours : transformation des métiers, tâches à valeur ajoutée, maturité IA, RGPD. Argumentez — ne restez pas dans les généralités.</p>
+      <textarea class="ans xl" id="q34pos" placeholder="Votre réflexion personnelle et argumentée…"></textarea>
+      <div class="cc" id="cc34">0 caractère</div>
+    </div>
+  </section>
+
+  <div class="footer">M2 Manager du Développement des Ressources Humaines · Module SIRH & IA · Bloc 3<br>Évaluation individuelle à usage pédagogique exclusif</div>
+</main>
+
+<div id="fab">
+  <div id="save-note">💾 Sauvegarde auto active</div>
+  <button class="fab-btn" onclick="exportPDF()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Exporter ma copie PDF
+  </button>
+</div>
+
+<script>
+const matC=["Processus stabilisé (pas de changement majeur prévu)","Processus formalisé (procédure écrite)","Acteurs identifiés et formés","Processus répétitif (> 20 fois/mois)","Processus chronophage (> 2h/itération)","Taux d'erreur élevé (> 5 %)","Données structurées (pas 100 % texte libre)","Budget alloué","Adhésion des utilisateurs","Outil adapté disponible"];
+const recrE=["Expression du besoin","Validation budgétaire","Rédaction de l'offre","Diffusion de l'annonce","Présélection","Entretiens","Décision & offre","Intégration (onboarding)"];
+const saasR=["Coût d'investissement initial","Maintenance & mises à jour","Accessibilité multi-sites","Sécurité / souveraineté données","Délai de déploiement","Personnalisation avancée","Dépendance à l'éditeur"];
+const kpiR=[["Recrutement","Délai moyen de recrutement"],["Recrutement","Coût par recrutement"],["Turnover","Taux de turnover global"],["Turnover","Part des départs < 2 ans"],["Absentéisme","Taux d'absentéisme"],["Formation","Taux de réalisation du plan"]];
+
+function buildMat(){const t=document.getElementById('t-mat');matC.forEach((c,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td class="lbl">${c}</td><td style="text-align:center"><select class="ssel" id="ms${i}" style="background:transparent;border:none;font-size:15px;cursor:pointer;outline:none;width:100%;padding:8px"><option value="">—</option><option>✅</option><option>🟠</option><option>❌</option></select></td><td><input type="text" id="mj${i}" placeholder="Justification spécifique à TechDistrib…"></td>`;t.appendChild(tr);});}
+
+function buildRecr(){const t=document.getElementById('t-recr');recrE.forEach((e,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td class="lbl">${e}</td><td><input type="text" id="ra${i}" placeholder="Acteur…"></td><td><input type="text" id="ri${i}" placeholder="Input…"></td><td><input type="text" id="ro${i}" placeholder="Output…"></td><td><input type="text" id="rf${i}" placeholder="Problème…" style="color:#f07c4a"></td>`;t.appendChild(tr);});}
+
+function buildSaas(){const t=document.getElementById('t-saas');saasR.forEach((r,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td class="lbl">${r}</td><td><input type="text" id="ss${i}" placeholder="SaaS…"></td><td><input type="text" id="so${i}" placeholder="OnPremise…"></td><td><input type="text" id="sr${i}" placeholder="Recommandation…"></td>`;t.appendChild(tr);});}
+
+function buildKpi(){const t=document.getElementById('t-kpi');kpiR.forEach(([d,k],i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td class="lbl"><small>${d}</small>${k}</td><td><input type="text" id="kf${i}" placeholder="Formule…"></td><td><input type="text" id="ks${i}" placeholder="Source…"></td><td><input type="text" id="kc${i}" placeholder="Cible…"></td>`;t.appendChild(tr);});}
+
+let secs=90*60,running=false,iv=null;
+
+function startTimer(){running=true;document.getElementById('t-btn').textContent='⏸ Pause';iv=setInterval(()=>{if(secs<=0){clearInterval(iv);return;}secs--;renderTimer();updateProg();},1000);}
+
+function toggleTimer(){if(running){clearInterval(iv);running=false;document.getElementById('t-btn').textContent='▶ Reprendre';}else{startTimer();}}
+
+function renderTimer(){const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60,el=document.getElementById('timer-display');el.textContent=(h?h+':':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.classList.remove('warn','crit');if(secs<=600)el.classList.add('crit');else if(secs<=1200)el.classList.add('warn');}
+
+function updateProg(){document.getElementById('prog-bar').style.width=Math.min(((90*60-secs)/(90*60))*100,100)+'%';}
+
+function save(){const d={};document.querySelectorAll('input[type="text"],textarea,select').forEach(el=>{if(el.id)d[el.id]=el.value;});try{localStorage.setItem('td_eval_ind',JSON.stringify(d));const n=new Date();document.getElementById('save-note').textContent='💾 Sauvegardé '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}catch(e){}}
+
+function load(){try{const raw=localStorage.getItem('td_eval_ind');if(!raw)return;const d=JSON.parse(raw);Object.entries(d).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v;});updateCC();}catch(e){}}
+
+function updateCC(){const el=document.getElementById('q34pos');if(!el)return;const n=el.value.length;document.getElementById('cc34').textContent=n+' caractère'+(n>1?'s':'');}
+
+function startEval(){const nom=document.getElementById('f-nom').value.trim(),prenom=document.getElementById('f-prenom').value.trim();if(!nom||!prenom){alert('Veuillez renseigner votre Nom et Prénom avant de commencer.');document.getElementById('f-nom').focus();return;}const full=prenom+' '+nom.toUpperCase();document.getElementById('hdr-name').textContent=full;document.getElementById('print-id').textContent=full+' · M2 MDRH · Module SIRH & IA';const scr=document.getElementById('screen-identity');scr.style.opacity='0';setTimeout(()=>{scr.style.display='none';document.getElementById('app-header').style.display='flex';document.getElementById('prog-wrap').style.display='block';document.getElementById('main').style.display='block';document.getElementById('fab').style.display='flex';load();startTimer();updateCC();},500);}
+
+/* ── PRINT SUBSTITUTION ─────────────────────────────────────────────
+   Before printing: replace every textarea and input[text] with a <div>
+   showing the actual typed value (or a greyed placeholder if empty).
+   After printing: restore originals.
+   This guarantees the full content is visible regardless of field height.
+──────────────────────────────────────────────────────────────────── */
+function exportPDF(){
+  save();
+
+  const replacements = []; // [{original, proxy}]
+
+  // ── textareas ──
+  document.querySelectorAll('textarea').forEach(ta => {
+    const proxy = document.createElement('div');
+    proxy.className = 'print-proxy print-proxy-ta';
+    proxy.textContent = ta.value || '';
+    if (!ta.value) proxy.style.color = '#aaa';
+    ta.parentNode.insertBefore(proxy, ta);
+    ta.style.display = 'none';
+    replacements.push({ original: ta, proxy });
+  });
+
+  // ── input[type=text] inside tables ──
+  document.querySelectorAll('input[type="text"]').forEach(inp => {
+    const proxy = document.createElement('div');
+    proxy.className = 'print-proxy print-proxy-inp';
+    proxy.textContent = inp.value || '';
+    if (!inp.value) proxy.style.color = '#aaa';
+    inp.parentNode.insertBefore(proxy, inp);
+    inp.style.display = 'none';
+    replacements.push({ original: inp, proxy });
+  });
+
+  // ── selects (show chosen emoji) ──
+  document.querySelectorAll('select.ssel').forEach(sel => {
+    const proxy = document.createElement('div');
+    proxy.className = 'print-proxy print-proxy-sel';
+    proxy.textContent = sel.value || '—';
+    sel.parentNode.insertBefore(proxy, sel);
+    sel.style.display = 'none';
+    replacements.push({ original: sel, proxy });
+  });
+
+  window.print();
+
+  // Restore after dialog closes
+  replacements.forEach(({ original, proxy }) => {
+    original.style.display = '';
+    proxy.remove();
+  });
+}
+
+document.addEventListener('input',e=>{if(e.target.id==='q34pos')updateCC();save();});
+document.addEventListener('change',save);
+document.getElementById('f-nom').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('f-prenom').focus();});
+document.getElementById('f-prenom').addEventListener('keydown',e=>{if(e.key==='Enter')startEval();});
+
+buildMat();buildRecr();buildSaas();buildKpi();
+</script>
+</body>
+</html>
