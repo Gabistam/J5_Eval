@@ -13,7 +13,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .id-wrap{width:100%;max-width:480px;padding:24px}
 .id-logo{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:32px;display:flex;align-items:center;gap:12px}
 .id-logo::before{content:'';display:block;width:32px;height:2px;background:var(--accent)}
-.id-title{font-family:'Fraunces',serif;font-size:38px;font-weight:600;line-height:1.1;margin-bottom:8px;color:var(--text)}
+.id-title{font-family:'Fraunces',serif;font-size:38px;font-weight
+:600;line-height:1.1;margin-bottom:8px;color:var(--text)}
 .id-sub{font-size:14px;color:var(--muted);margin-bottom:40px;line-height:1.5}
 .id-field{margin-bottom:18px}
 .id-field label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
@@ -167,7 +168,7 @@ textarea.ans.xl{min-height:260px}
     <div class="id-field"><label>Prénom *</label><input type="text" id="f-prenom" placeholder="Marie" autocomplete="given-name"></div>
 
     <button class="btn-start" onclick="startEval()">Commencer l'évaluation →</button>
-    <p class="id-note">Durée : 1h30 · Documents autorisés · Travail individuel</p>
+    <p class="id-note">Durée : 2h · Documents autorisés · Travail individuel</p>
   </div>
 </div>
 
@@ -176,7 +177,7 @@ textarea.ans.xl{min-height:260px}
   <div class="hdr-title">Évaluation Finale · SIRH & IA</div>
   <div class="hdr-right">
     <button class="t-btn" id="t-btn" onclick="toggleTimer()">⏸ Pause</button>
-    <div id="timer-display">1:30:00</div>
+    <div id="timer-display">2:00:00</div>
   </div>
 </header>
 <div id="prog-wrap"><div id="prog-bar"></div></div>
@@ -188,7 +189,7 @@ textarea.ans.xl{min-height:260px}
     <div class="hero-tag">Module SIRH · Data · IA — Bloc 3 RNCP</div>
     <h1 class="hero-title">Évaluation finale<br><em>TechDistrib</em></h1>
     <div class="chips">
-      <span class="chip">⏱ 1h30</span>
+      <span class="chip">⏱ 2h</span>
       <span class="chip">👤 Travail individuel</span>
       <span class="chip">📄 Export PDF</span>
       <span class="chip">✅ Supports autorisés</span>
@@ -214,9 +215,9 @@ textarea.ans.xl{min-height:260px}
     <div class="cas-head">
       <div class="cas-n n1">01</div>
       <div class="cas-info">
-        <div class="cas-pill p1">Cas 1 · 30 min</div>
+        <div class="cas-pill p1">Cas 1 · 40 min</div>
         <h2 class="cas-title">Diagnostic & Analyse<br>du système d'information</h2>
-        <div class="cas-time">⏱ 30 minutes conseillées</div>
+        <div class="cas-time">⏱ 40 minutes conseillées</div>
       </div>
     </div>
     <div class="situ"><strong>Mise en situation :</strong> Isabelle vous confie l'état des lieux avant tout projet de digitalisation. Vous devez évaluer la maturité digitale de TechDistrib, cartographier un processus clé <em>tel qu'il existe aujourd'hui</em>, et amorcer une réflexion sur l'exploitation des données.</div>
@@ -257,9 +258,9 @@ textarea.ans.xl{min-height:260px}
     <div class="cas-head">
       <div class="cas-n n2">02</div>
       <div class="cas-info">
-        <div class="cas-pill p2">Cas 2 · 30 min</div>
+        <div class="cas-pill p2">Cas 2 · 40 min</div>
         <h2 class="cas-title">Choix SIRH & Plan<br>de déploiement</h2>
-        <div class="cas-time">⏱ 30 minutes conseillées</div>
+        <div class="cas-time">⏱ 40 minutes conseillées</div>
       </div>
     </div>
     <div class="situ"><strong>Mise en situation :</strong> Le diagnostic est posé. Isabelle soumet à la direction une recommandation sur le choix de la solution et les modules prioritaires. Elle attend <em>votre analyse personnelle et justifiée</em> — pas de réponse unique attendue, mais une argumentation solide.</div>
@@ -305,9 +306,9 @@ textarea.ans.xl{min-height:260px}
     <div class="cas-head">
       <div class="cas-n n3">03</div>
       <div class="cas-info">
-        <div class="cas-pill p3">Cas 3 · 30 min</div>
+        <div class="cas-pill p3">Cas 3 · 40 min</div>
         <h2 class="cas-title">Data, IA & Position<br>stratégique personnelle</h2>
-        <div class="cas-time">⏱ 30 minutes conseillées</div>
+        <div class="cas-time">⏱ 40 minutes conseillées</div>
       </div>
     </div>
     <div class="situ"><strong>Mise en situation :</strong> 18 mois après le déploiement, TechDistrib dispose enfin de données centralisées. La DG demande à Isabelle une note sur l'exploitation des données et l'intégration de l'IA. Elle souhaite des recommandations concrètes et <em>votre position personnelle argumentée</em>.</div>
@@ -380,7 +381,7 @@ function buildSaas(){const t=document.getElementById('t-saas');saasR.forEach((r,
 
 function buildKpi(){const t=document.getElementById('t-kpi');kpiR.forEach(([d,k],i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td class="lbl"><small>${d}</small>${k}</td><td><input type="text" id="kf${i}" placeholder="Formule…"></td><td><input type="text" id="ks${i}" placeholder="Source…"></td><td><input type="text" id="kc${i}" placeholder="Cible…"></td>`;t.appendChild(tr);});}
 
-let secs=90*60,running=false,iv=null;
+let secs=120*60,running=false,iv=null;
 
 function startTimer(){running=true;document.getElementById('t-btn').textContent='⏸ Pause';iv=setInterval(()=>{if(secs<=0){clearInterval(iv);return;}secs--;renderTimer();updateProg();},1000);}
 
@@ -388,7 +389,7 @@ function toggleTimer(){if(running){clearInterval(iv);running=false;document.getE
 
 function renderTimer(){const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60,el=document.getElementById('timer-display');el.textContent=(h?h+':':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.classList.remove('warn','crit');if(secs<=600)el.classList.add('crit');else if(secs<=1200)el.classList.add('warn');}
 
-function updateProg(){document.getElementById('prog-bar').style.width=Math.min(((90*60-secs)/(90*60))*100,100)+'%';}
+function updateProg(){document.getElementById('prog-bar').style.width=Math.min(((120*60-secs)/(120*60))*100,100)+'%';}
 
 function save(){const d={};document.querySelectorAll('input[type="text"],textarea,select').forEach(el=>{if(el.id)d[el.id]=el.value;});try{localStorage.setItem('td_eval_ind',JSON.stringify(d));const n=new Date();document.getElementById('save-note').textContent='💾 Sauvegardé '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}catch(e){}}
 
